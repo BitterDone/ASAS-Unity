@@ -16,6 +16,7 @@ Assets/UnityARKitPlugin*
 [Ll]ogs/
 [Aa]ssets/AssetStoreTools*
 Assets/AzureSpatialAnchors*/
+/app/
 
 # Visual Studio cache directory
 .vs/
