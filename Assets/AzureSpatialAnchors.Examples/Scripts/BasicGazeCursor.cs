@@ -59,13 +59,20 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
         {
             // Do a raycast into the world based on the user's
             // head position and orientation.
+            Debug.Log("Update");
             Camera mainCamera = Camera.main;
-            Vector3 headPosition = mainCamera.transform.position;
+            Debug.Log("Camera mainCamera = Camera.main;");
+            Transform headTransform = mainCamera.transform;
+            Debug.Log("Transform headTransform = mainCamera.transform;");
+            Vector3 headPosition = headTransform.position;
+            Debug.Log("Vector3 headPosition = headTransform.position;");
             Vector3 gazeDirection = mainCamera.transform.forward;
+            Debug.Log("Vector3 gazeDirection = mainCamera.transform.forward;");
 
             RaycastHit hitInfo;
             if (Physics.Raycast(headPosition, gazeDirection, out hitInfo, 150.0f, ~(1 << 20)))
             {
+                Debug.Log("f (Physics.Raycast(headPosition, gazeDirection, out hitInfo, 150.0f, ~(1 << 20)))");
                 transform.position = hitInfo.point;
                 transform.rotation = Quaternion.FromToRotation(Vector3.up, hitInfo.normal);
                 // if the gaze is over a button, keep track of that so we can
@@ -74,10 +81,12 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             }
             else
             {
+                Debug.Log("else");
                 transform.position = headPosition + gazeDirection * 2.0f;
                 transform.rotation = Quaternion.FromToRotation(Vector3.up, -gazeDirection);
                 targeted = null;
             }
+            Debug.Log("Update end");
         }
     }
 }

@@ -81,6 +81,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
         /// </summary>
         public override void Start()
         {
+            Debug.Log("starting AzureSpatialAnchorsBasicDemoScript");
             Debug.Log(">>Azure Spatial Anchors Demo Script Start");
 
             base.Start();

@@ -76,6 +76,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
         /// </summary>
         public override void Start()
         {
+            Debug.Log("starting DemoScriptBase");
             feedbackBox = XRUXPicker.Instance.GetFeedbackText();
             if (feedbackBox == null)
             {
@@ -336,7 +337,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
         protected override void OnGazeInteraction()
         {
             #if WINDOWS_UWP || UNITY_WSA
-            // HoloLens gaze interaction
+            // HoloLens gaze interaction // eye tracking
             if (IsPlacingObject())
             {
                 base.OnGazeInteraction();
@@ -385,7 +386,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
         /// <summary>
         /// Called when a select interaction occurs.
         /// </summary>
-        /// <remarks>Currently only called for HoloLens.</remarks>
+        /// <remarks>Currently only called for HoloLens.</remarks> // this is what i want
         protected override void OnSelectInteraction()
         {
             #if WINDOWS_UWP || UNITY_WSA
@@ -415,7 +416,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
         }
 
         /// <summary>
-        /// Called when a touch interaction occurs.
+        /// Called when a touch interaction occurs. // fingers on a screen
         /// </summary>
         /// <param name="touch">The touch.</param>
         protected override void OnTouchInteraction(Touch touch)

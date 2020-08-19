@@ -35,6 +35,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
         /// </summary>
         public virtual void Start()
         {
+            Debug.Log("starting InputInteractionBase");
 #if UNITY_ANDROID || UNITY_IOS
              arRaycastManager = FindObjectOfType<ARRaycastManager>();
             if (arRaycastManager == null)
@@ -100,7 +101,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
         }
 
         /// <summary>
-        /// Called when a touch interaction occurs.
+        /// Called when a touch interaction occurs. // fingers on screen
         /// </summary>
         /// <param name="touch">The touch.</param>
         protected virtual void OnTouchInteraction(Touch touch)
@@ -135,7 +136,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
         }
 
         /// <summary>
-        /// Called when a select interaction occurs.
+        /// Called when a select interaction occurs. // this is what i want
         /// </summary>
         /// <remarks>Currently only called for HoloLens.</remarks>
         protected virtual void OnSelectInteraction()
