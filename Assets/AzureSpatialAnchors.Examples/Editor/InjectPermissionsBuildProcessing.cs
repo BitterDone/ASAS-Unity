@@ -6,9 +6,6 @@ using System.Xml;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
-#if UNITY_IOS
-using UnityEditor.iOS.Xcode;
-#endif
 using UnityEngine;
 
 namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
@@ -123,53 +120,19 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
         }
 
         /// <summary>
-        /// Enables the "Access Wi-Fi Information" capability for the Unity player target
+        /// Enables the "Access Wi-Fi Information" capability for the Unity player target, only iOS
         /// </summary>
         /// <param name="buildOutputPath">Build output path.</param>
         private static void EnableAccessWifiInformationCapability(string buildOutputPath)
         {
-#if UNITY_IOS
-            string xcodeProjectFolder = "Unity-iPhone.xcodeproj";
-            string pbxProjectPath = Path.Combine(buildOutputPath, xcodeProjectFolder, "project.pbxproj");
-            string entitlementsPath = Path.Combine(xcodeProjectFolder, "helloar.entitlements");
-            string unityPlayerTarget = "Unity-iPhone";
-            ProjectCapabilityManager capabilityManager = new ProjectCapabilityManager(pbxProjectPath, entitlementsPath, unityPlayerTarget);
-            capabilityManager.AddAccessWiFiInformation();
-            capabilityManager.WriteToFile();
-
-            string accessWifiInformationCapabilityName = "com.apple.AccessWiFi";
-            if (!accessWifiInformationCapabilityName.Equals(PBXCapabilityType.AccessWiFiInformation.id))
-            {
-                Debug.LogWarning($"Working around Unity bug: " +
-                    $"PBXCapabilityType.AccessWiFiInformation.id should be {accessWifiInformationCapabilityName} " +
-                    $"but is {PBXCapabilityType.AccessWiFiInformation.id} instead.");
-
-                string oldProject = File.ReadAllText(pbxProjectPath);
-                string newProject = oldProject.Replace(PBXCapabilityType.AccessWiFiInformation.id, accessWifiInformationCapabilityName);
-                File.WriteAllText(pbxProjectPath, newProject);
-            }
-#endif
         }
 
         /// <summary>
-        /// Adds the "Bluetooth Always Usage Description" property to Info.plist
+        /// Adds the "Bluetooth Always Usage Description" property to Info.plist, only iOS
         /// </summary>
         /// <param name="buildOutputPath">Build output path.</param>
         private static void AddBluetoothUsageDescription(string buildOutputPath)
         {
-#if UNITY_IOS
-            string infoPlistPath = Path.Combine(buildOutputPath, "Info.plist");
-            var propertyList = new PlistDocument();
-            propertyList.ReadFromFile(infoPlistPath);
-
-            // Set both NSBluetoothAlwaysUsageDescription and NSBluetoothPeripheralUsageDescription
-            // for compatibility with iOS versions earlier than 13.
-            const string bluetoothUsageDescription = "This application uses bluetooth to find nearby beacons.";
-            propertyList.root.SetString("NSBluetoothAlwaysUsageDescription", bluetoothUsageDescription);
-            propertyList.root.SetString("NSBluetoothPeripheralUsageDescription", bluetoothUsageDescription);
-
-            propertyList.WriteToFile(infoPlistPath);
-#endif
         }
     }
 }
