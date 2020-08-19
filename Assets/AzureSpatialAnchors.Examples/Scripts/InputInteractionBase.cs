@@ -46,18 +46,6 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
         private void TriggerInteractions()
         {
             OnGazeInteraction();
-
-            if (Input.touchCount > 0)
-            {
-                Touch touch = Input.GetTouch(0);
-
-                if (EventSystem.current.IsPointerOverGameObject(touch.fingerId))
-                {
-                    return;
-                }
-
-                OnTouchInteraction(touch);
-            }
         }
 
         /// <summary>
@@ -85,33 +73,6 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
         protected virtual void OnGazeObjectInteraction(Vector3 hitPoint, Vector3 hitNormal)
         {
             // To be overridden.
-        }
-
-        /// <summary>
-        /// Called when a touch interaction occurs. // fingers on screen
-        /// </summary>
-        /// <param name="touch">The touch.</param>
-        protected virtual void OnTouchInteraction(Touch touch)
-        {
-            if (touch.phase == TouchPhase.Ended)
-            {
-                OnTouchInteractionEnded(touch);
-            }
-        }
-
-        /// <summary>
-        /// Called when a touch interaction has ended.
-        /// </summary>
-        /// <param name="touch">The touch.</param>
-        protected virtual void OnTouchInteractionEnded(Touch touch)
-        {
-#if WINDOWS_UWP || UNITY_WSA
-            RaycastHit hit;
-            if (TryGazeHitTest(out hit))
-            {
-                OnSelectObjectInteraction(hit.point, hit);
-            }
-#endif
         }
 
         /// <summary>

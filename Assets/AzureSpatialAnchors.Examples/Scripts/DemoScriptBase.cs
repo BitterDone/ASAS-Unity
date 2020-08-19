@@ -416,18 +416,6 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
         }
 
         /// <summary>
-        /// Called when a touch interaction occurs. // fingers on a screen
-        /// </summary>
-        /// <param name="touch">The touch.</param>
-        protected override void OnTouchInteraction(Touch touch)
-        {
-            if (IsPlacingObject())
-            {
-                base.OnTouchInteraction(touch);
-            }
-        }
-
-        /// <summary>
         /// Saves the current object anchor to the cloud.
         /// </summary>
         protected virtual async Task SaveCurrentObjectAnchorToCloudAsync()
