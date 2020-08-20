@@ -117,10 +117,8 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
         /// <summary>
         /// Update is called every frame, if the MonoBehaviour is enabled.
         /// </summary>
-        public override void Update()
+        public void Update()
         {
-            base.Update();
-
             if (spawnedObjectMat != null)
             {
                 float rat = 0.1f;

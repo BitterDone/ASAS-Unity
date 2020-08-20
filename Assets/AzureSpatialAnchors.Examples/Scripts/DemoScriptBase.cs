@@ -34,10 +34,8 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
         private SpatialAnchorManager cloudManager = null;
         #endregion // Unity Inspector Variables
 
-        /// <summary>
         /// Destroying the attached Behaviour will result in the game or Scene
         /// receiving OnDestroy.
-        /// </summary>
         /// <remarks>OnDestroy will only be called on game objects that have previously been active.</remarks>
         public override void OnDestroy()
         {
@@ -70,10 +68,8 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             return true;
         }
 
-        /// <summary>
         /// Start is called on the frame when a script is enabled just before any
         /// of the Update methods are called the first time.
-        /// </summary>
         public override void Start()
         {
             Debug.Log("starting DemoScriptBase");
@@ -115,18 +111,14 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             base.Start();
         }
 
-        /// <summary>
         /// Advances the demo.
-        /// </summary>
         /// <returns>
         /// A <see cref="Task"/> that represents the operation.
         /// </returns>
         public abstract Task AdvanceDemoAsync();
 
-        /// <summary>
         /// This version only exists for Unity to wire up a button click to.
         /// If calling from code, please use the Async version above.
-        /// </summary>
         public async void AdvanceDemo()
         {
             try
@@ -156,9 +148,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             }
         }
 
-        /// <summary>
         /// returns to the launcher scene.
-        /// </summary>
         public async void ReturnToLauncher()
         {
             // If AdvanceDemoAsync is still running from the gesture handler,
@@ -169,9 +159,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             SceneManager.LoadScene(0);
         }
 
-        /// <summary>
         /// Cleans up spawned objects.
-        /// </summary>
         protected virtual void CleanupSpawnedObjects()
         {
             if (spawnedObject != null)
@@ -250,36 +238,23 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
                                             LocateStrategy.VisualInformation;
         }
 
-        /// <summary>
         /// Bypassing the cache will force new queries to be sent for objects, allowing
         /// for refined poses over time.
-        /// </summary>
-        /// <param name="BypassCache"></param>
         public void SetBypassCache(bool BypassCache)
         {
             anchorLocateCriteria.BypassCache = BypassCache;
         }
 
 
-        /// <summary>
         /// Gets the color of the current demo step.
-        /// </summary>
         /// <returns><see cref="Color"/>.</returns>
         protected abstract Color GetStepColor();
 
-        /// <summary>
         /// Determines whether the demo is in a mode that should place an object.
-        /// </summary>
         /// <returns><c>true</c> to place; otherwise, <c>false</c>.</returns>
         protected abstract bool IsPlacingObject();
 
-        /// <summary>
         /// Moves the specified anchored object.
-        /// </summary>
-        /// <param name="objectToMove">The anchored object to move.</param>
-        /// <param name="worldPos">The world position.</param>
-        /// <param name="worldRot">The world rotation.</param>
-        /// <param name="cloudSpatialAnchor">The cloud spatial anchor.</param>
         protected virtual void MoveAnchoredObject(GameObject objectToMove, Vector3 worldPos, Quaternion worldRot, CloudSpatialAnchor cloudSpatialAnchor = null)
         {
             // Get the cloud-native anchor behavior
@@ -305,65 +280,26 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             }
         }
 
-        /// <summary>
         /// Called when a cloud anchor is located.
-        /// </summary>
-        /// <param name="args">The <see cref="AnchorLocatedEventArgs"/> instance containing the event data.</param>
         protected virtual void OnCloudAnchorLocated(AnchorLocatedEventArgs args)
         {
             // To be overridden.
         }
 
-        /// <summary>
         /// Called when cloud anchor location has completed.
-        /// </summary>
-        /// <param name="args">The <see cref="LocateAnchorsCompletedEventArgs"/> instance containing the event data.</param>
         protected virtual void OnCloudLocateAnchorsCompleted(LocateAnchorsCompletedEventArgs args)
         {
             Debug.Log("Locate pass complete");
         }
 
-        /// <summary>
         /// Called when the current cloud session is updated.
-        /// </summary>
         protected virtual void OnCloudSessionUpdated()
         {
             // To be overridden.
         }
 
-        /// <summary>
-        /// Called when gaze interaction occurs.
-        /// </summary>
-        protected override void OnGazeInteraction()
-        {
-            #if WINDOWS_UWP || UNITY_WSA
-            // HoloLens gaze interaction // eye tracking
-            if (IsPlacingObject())
-            {
-                base.OnGazeInteraction();
-            }
-            #endif
-        }
 
-        /// <summary>
-        /// Called when gaze interaction begins.
-        /// </summary>
-        /// <param name="hitPoint">The hit point.</param>
-        /// <param name="target">The target.</param>
-        protected override void OnGazeObjectInteraction(Vector3 hitPoint, Vector3 hitNormal)
-        {
-            base.OnGazeObjectInteraction(hitPoint, hitNormal);
-
-            #if WINDOWS_UWP || UNITY_WSA
-            Quaternion rotation = Quaternion.FromToRotation(Vector3.up, hitNormal);
-            SpawnOrMoveCurrentAnchoredObject(hitPoint, rotation);
-            #endif
-        }
-
-        /// <summary>
         /// Called when a cloud anchor is not saved successfully.
-        /// </summary>
-        /// <param name="exception">The exception.</param>
         protected virtual void OnSaveCloudAnchorFailed(Exception exception)
         {
             // we will block the next step to show the exception message in the UI.
@@ -374,18 +310,14 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             UnityDispatcher.InvokeOnAppThread(() => this.feedbackBox.text = string.Format("Error: {0}", exception.ToString()));
         }
 
-        /// <summary>
         /// Called when a cloud anchor is saved successfully.
-        /// </summary>
         protected virtual Task OnSaveCloudAnchorSuccessfulAsync()
         {
             // To be overridden.
             return Task.CompletedTask;
         }
 
-        /// <summary>
         /// Called when a select interaction occurs.
-        /// </summary>
         /// <remarks>Currently only called for HoloLens.</remarks> // this is what i want
         protected override void OnSelectInteraction()
         {
@@ -400,11 +332,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             base.OnSelectInteraction();
         }
 
-        /// <summary>
         /// Called when a touch object interaction occurs.
-        /// </summary>
-        /// <param name="hitPoint">The position.</param>
-        /// <param name="target">The target.</param>
         protected override void OnSelectObjectInteraction(Vector3 hitPoint, object target)
         {
             if (IsPlacingObject())
@@ -415,9 +343,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             }
         }
 
-        /// <summary>
         /// Saves the current object anchor to the cloud.
-        /// </summary>
         protected virtual async Task SaveCurrentObjectAnchorToCloudAsync()
         {
             // Get the cloud-native anchor behavior
@@ -471,11 +397,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             }
         }
 
-        /// <summary>
         /// Spawns a new anchored object.
-        /// </summary>
-        /// <param name="worldPos">The world position.</param>
-        /// <param name="worldRot">The world rotation.</param>
         /// <returns><see cref="GameObject"/>.</returns>
         protected virtual GameObject SpawnNewAnchoredObject(Vector3 worldPos, Quaternion worldRot)
         {
@@ -493,12 +415,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             return newGameObject;
         }
 
-        /// <summary>
         /// Spawns a new object.
-        /// </summary>
-        /// <param name="worldPos">The world position.</param>
-        /// <param name="worldRot">The world rotation.</param>
-        /// <param name="cloudSpatialAnchor">The cloud spatial anchor.</param>
         /// <returns><see cref="GameObject"/>.</returns>
         protected virtual GameObject SpawnNewAnchoredObject(Vector3 worldPos, Quaternion worldRot, CloudSpatialAnchor cloudSpatialAnchor)
         {
@@ -519,12 +436,8 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             return newGameObject;
         }
 
-        /// <summary>
         /// Spawns a new anchored object and makes it the current object or moves the
         /// current anchored object if one exists.
-        /// </summary>
-        /// <param name="worldPos">The world position.</param>
-        /// <param name="worldRot">The world rotation.</param>
         protected virtual void SpawnOrMoveCurrentAnchoredObject(Vector3 worldPos, Quaternion worldRot)
         {
             // Create the object if we need to, and attach the platform appropriate
@@ -584,14 +497,10 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
 
 
         #region Public Properties
-        /// <summary>
         /// Gets the prefab used to represent an anchored object.
-        /// </summary>
         public GameObject AnchoredObjectPrefab { get { return anchoredObjectPrefab; } }
 
-        /// <summary>
         /// Gets the <see cref="SpatialAnchorManager"/> instance used by this demo.
-        /// </summary>
         public SpatialAnchorManager CloudManager { get { return cloudManager; } }
         #endregion // Public Properties
     }
