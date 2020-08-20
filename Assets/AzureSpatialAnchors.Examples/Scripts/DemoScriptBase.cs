@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
 {
-    public abstract class DemoScriptBase : InputInteractionBase
+    public abstract class DemoScriptBase : MonoBehaviour // InputInteractionBase
     {
         #region Member Variables
         private Task advanceDemoTask = null;
@@ -37,7 +37,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
         /// Destroying the attached Behaviour will result in the game or Scene
         /// receiving OnDestroy.
         /// <remarks>OnDestroy will only be called on game objects that have previously been active.</remarks>
-        public override void OnDestroy()
+        public /*override*/ void OnDestroy()
         {
             if (CloudManager != null)
             {
@@ -53,7 +53,8 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             CleanupSpawnedObjects();
 
             // Pass to base for final cleanup
-            base.OnDestroy();
+            // base.OnDestroy();
+            UnityEngine.XR.WSA.Input.InteractionManager.InteractionSourcePressed -= InteractionManager_InteractionSourcePressed;
         }
 
         public virtual bool SanityCheckAccessConfiguration()
@@ -70,7 +71,8 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
 
         /// Start is called on the frame when a script is enabled just before any
         /// of the Update methods are called the first time.
-        public override void Start()
+        // public /*override*/ void Start()
+        public virtual void Start()
         {
             Debug.Log("starting DemoScriptBase");
             feedbackBox = XRUXPicker.Instance.GetFeedbackText();
@@ -108,7 +110,16 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
 
             anchorLocateCriteria = new AnchorLocateCriteria();
 
-            base.Start();
+            // base.Start();
+            UnityEngine.XR.WSA.Input.InteractionManager.InteractionSourcePressed += InteractionManager_InteractionSourcePressed;
+        }
+
+        private void InteractionManager_InteractionSourcePressed(UnityEngine.XR.WSA.Input.InteractionSourcePressedEventArgs obj)
+        {
+            if (obj.pressType == UnityEngine.XR.WSA.Input.InteractionSourcePressType.Select)
+            {
+                OnSelectInteraction();
+            }
         }
 
         /// Advances the demo.
@@ -319,7 +330,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
 
         /// Called when a select interaction occurs.
         /// <remarks>Currently only called for HoloLens.</remarks> // this is what i want
-        protected override void OnSelectInteraction()
+        protected /*override*/ void OnSelectInteraction()
         {
             #if WINDOWS_UWP || UNITY_WSA
             if(enableAdvancingOnSelect)
@@ -327,13 +338,24 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
                 // On HoloLens, we just advance the demo.
                 UnityDispatcher.InvokeOnAppThread(() => advanceDemoTask = AdvanceDemoAsync());
             }
-            #endif
+#endif
 
-            base.OnSelectInteraction();
+            // base.OnSelectInteraction();
+            RaycastHit hit;
+            if (TryGazeHitTest(out hit))
+            {
+                OnSelectObjectInteraction(hit.point, hit);
+            }
+        }
+
+        private bool TryGazeHitTest(out RaycastHit target)
+        {
+            Transform mainCameraT = Camera.main.transform;
+            return Physics.Raycast(mainCameraT.position, mainCameraT.forward, out target);
         }
 
         /// Called when a touch object interaction occurs.
-        protected override void OnSelectObjectInteraction(Vector3 hitPoint, object target)
+        protected /*override*/ void OnSelectObjectInteraction(Vector3 hitPoint, object target)
         {
             if (IsPlacingObject())
             {
